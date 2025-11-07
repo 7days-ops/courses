@@ -1,0 +1,26 @@
+---
+- name: Manage users on all nodes
+  hosts: all
+  become: true
+
+  vars:
+    ansible_user_name: ansible_user
+    ansible_user_password: "{{ 'MyStrongPassword123' | password_hash('sha512') }}"
+
+  tasks:
+    - name: Create ansible_user
+      ansible.builtin.user:
+        name: "{{ ansible_user_name }}"
+        password: "{{ ansible_user_password }}"
+        shell: /bin/bash
+        groups: "{{ 'sudo' if ansible_distribution == 'Ubuntu' else 'wheel' }}"
+        append: yes
+        create_home: yes
+
+    - name: Ensure ansible_user can use sudo without password prompt
+      ansible.builtin.copy:
+        dest: "/etc/sudoers.d/{{ ansible_user_name }}"
+        content: "{{ ansible_user_name }} ALL=(ALL) NOPASSWD:ALL"
+        owner: root
+        group: root
+        mode: "0440"

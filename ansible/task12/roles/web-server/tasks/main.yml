@@ -1,0 +1,45 @@
+- name: Install web server on Ubuntu
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+  notify: restart nginx
+
+- name: Install web server on Fedora
+  ansible.builtin.dnf:
+    name: httpd
+    state: present
+    update_cache: yes
+  when: ansible_distribution == "Fedora"
+  notify: restart httpd
+
+- name: Copy index.html to web root (Ubuntu)
+  ansible.builtin.copy:
+    src: index.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Copy index.html to web root (Fedora)
+  ansible.builtin.copy:
+    src: index.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: "0644"
+  when: ansible_distribution == "Fedora"
+
+- name: Open port 80 on Ubuntu
+  ansible.builtin.command: ufw allow 80
+  when: ansible_distribution == "Ubuntu"
+
+- name: Open port 80 on Fedora
+  ansible.builtin.firewalld:
+    port: 80/tcp
+    permanent: yes
+    state: enabled
+    immediate: yes
+  when: ansible_distribution == "Fedora"

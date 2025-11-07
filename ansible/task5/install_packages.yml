@@ -1,0 +1,19 @@
+- name: Install nginx
+  hosts: example-group
+  gather_facts: yes
+  become: true
+
+  tasks:
+    - name: Install nginx on Ubuntu
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: yes
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Install nginx on Fedora
+      ansible.builtin.dnf:
+        name: nginx
+        state: present
+        update_cache: yes
+      when: ansible_distribution == 'Fedora'

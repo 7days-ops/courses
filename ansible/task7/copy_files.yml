@@ -1,0 +1,36 @@
+---
+- name: Copy index.html to web servers
+  hosts: all
+  become: true
+
+  vars:
+    html_src: index.html
+    html_dest: /var/www/html/index.html
+
+  tasks:
+    - name: Ensure target directory exists
+      ansible.builtin.file:
+        path: /var/www/html
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Copy index.html to proper directory
+      ansible.builtin.copy:
+        src: "{{ html_src }}"
+        dest: "{{ html_dest }}"
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Ensure web server is installed and running or not
+      ansible.builtin.package:
+        name: "{{ 'nginx' if ansible_distribution == 'Fedora' else 'apache2' }}"
+        state: present
+
+    - name: Start and enable web server
+      ansible.builtin.service:
+        name: "{{ 'nginx' if ansible_distribution == 'Fedora' else 'apache2' }}"
+        state: started
+        enabled: yes

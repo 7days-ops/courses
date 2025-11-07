@@ -1,0 +1,18 @@
+---
+- name: Install web server depending on OS
+  hosts: all
+  become: true
+  tasks:
+    - name: Install nginx on Ubuntu
+      ansible.builtin.apt:
+        name: "nginx={{ nginx_version }}"
+        state: present
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install httpd on Fedora
+      ansible.builtin.dnf:
+        name: "httpd-{{ httpd_version }}"
+        state: present
+        update_cache: yes
+      when: ansible_distribution == "Fedora"

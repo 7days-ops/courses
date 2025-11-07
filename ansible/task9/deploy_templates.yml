@@ -1,0 +1,29 @@
+---
+- name: Deploy dynamic HTML template
+  hosts: all
+  become: true
+
+  vars:
+    web_root: /var/www/html
+    web_file: index.html
+
+  tasks:
+    - name: Ensure web root directory exists
+      ansible.builtin.file:
+        path: "{{ web_root }}"
+        state: directory
+        mode: "0755"
+
+    - name: Deploy index.html from template
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: "{{ web_root }}/{{ web_file }}"
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Ensure web server is running
+      ansible.builtin.service:
+        name: "{{ 'apache2' if ansible_distribution == 'Ubuntu' else 'nginx' }}"
+        state: started
+        enabled: yes

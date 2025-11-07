@@ -1,0 +1,42 @@
+---
+- name: Configure firewall to allow HTTP
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Open port  on Ubuntu with UFW
+      ansible.builtin.ufw:
+        rule: allow
+        port: "80"
+        proto: tcp
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Ensure UFW is enabled
+      ansible.builtin.ufw:
+        state: enabled
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Open port 80 on Fedora with firewalld
+      ansible.posix.firewalld:
+        port: 80/tcp
+        permanent: yes
+        state: enabled
+        immediate: yes
+      when: ansible_distribution == "Fedora"
+
+    - name: Ensure firewalld is running and enabled (Fedora)
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: yes
+      when: ansible_distribution == "Fedora"
+
+    - name: Verify port  is open
+      ansible.builtin.shell: |
+        ss -tuln | grep ':80 '
+      register: port_check
+      ignore_errors: yes
+
+    - name: Show firewall check result
+      ansible.builtin.debug:
+        msg: "{{ port_check.stdout_lines | default(['Port 80 not open']) }}"

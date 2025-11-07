@@ -1,0 +1,12 @@
+---
+- name: Gather system facts and show CPU, RAM, hostname
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Show host information
+      ansible.builtin.debug:
+        msg: |
+          Host: {{ ansible_hostname }}
+          CPUs: {{ ansible_processor_vcpus }}
+          RAM Volume: {{ ansible_memtotal_mb }} MB

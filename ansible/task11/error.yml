@@ -1,0 +1,21 @@
+---
+- name: Demonstrate error handling when installing a non-existent package
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Try to install
+      block:
+        - name: Attempt package installation
+          ansible.builtin.package:
+            name: "this-package-does-not-exist"
+            state: present
+          register: result
+      rescue:
+        - name: Print error message
+          ansible.builtin.debug:
+            msg: "Пакет не найден"
+      always:
+        - name: Final message
+          ansible.builtin.debug:
+            msg: "Задача завершена (block/rescue test)"

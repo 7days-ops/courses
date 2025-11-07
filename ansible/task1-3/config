@@ -1,0 +1,29 @@
+Host master
+ IdentityFile ~/.ssh/server.key
+ User malutka
+ Port 4444
+ HostName 192.168.0.5
+
+Host control1
+ IdentityFile ~/.ssh/server.key
+ User malutka
+ Port 22
+ HostName 192.168.0.6
+
+Host control2
+ IdentityFile ~/.ssh/server.key
+ User malutka
+ Port 22
+ Hostname 192.168.0.7
+
+Host control3
+ IdentityFile ~/.ssh/server.key
+ User malutka
+ Port 22
+ Hostname 192.168.0.8
+
+Host fedora
+ IdentityFile ~/.ssh/private_key
+ User vagrant
+ Port 22
+ Hostname 192.168.0.169
