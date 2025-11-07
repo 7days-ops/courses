@@ -9,7 +9,7 @@ Thumbs.db
 venv/
 .env/
 .venv/
-docker/task4/.env/
+
 
 __pycache__/
 *.py[cod]
