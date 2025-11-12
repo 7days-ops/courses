@@ -1,0 +1,7 @@
+# Ignore everything
+*
+
+# Keep only essential files
+!.gitignore
+!Chart.yaml
+!values.yaml

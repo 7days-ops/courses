@@ -1,0 +1,14 @@
+## Custom WordPress values
+## Modified service configuration
+
+service:
+  ## Changed service type from LoadBalancer to NodePort
+  type: NodePort
+  ## Changed HTTP port from 80 to 8080
+  ports:
+    http: 8080
+    https: 443
+  ## Specify NodePort for HTTP (must be between 30000-32767)
+  nodePorts:
+    http: 30080
+    https: ""

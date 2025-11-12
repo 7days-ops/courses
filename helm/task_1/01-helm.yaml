@@ -1,0 +1,5 @@
+---
+name: Install helm
+  run: brew install helm
+name: Helm charts and nginx
+  run: helm pull oci://ghcr.io/nginx/charts/nginx-ingress --untar --version 2.3.1 
