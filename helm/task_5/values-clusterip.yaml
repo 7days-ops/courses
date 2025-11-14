@@ -1,0 +1,12 @@
+# Пример конфигурации с ClusterIP (внутренний доступ)
+
+replicaCount: 2
+
+image:
+  repository: nginx
+  tag: "1.25.3-alpine"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
